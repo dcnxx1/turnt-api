@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id     String     @id()
+  alias       String     @db.TinyText
+  avatar      String?
+  location    String?
+  description String?    @db.Text
+  dob         DateTime? 
+  role        String?
+  created_at  DateTime   @default(now())
+  updated_at  DateTime?  @default(now())
+  turns        Turn[]
+  likes Like[]
+  playlist Playlist[]
+  
+}
+
+model Turn {
+  turn_id           String    @id()
+  title             String
+  source            String
+  impressionSource String?
+  impressionStartAt Int?
+  type              String?
+  cover             String?
+  duration          Int?
+  genre             String
+  artist_id         String?
+  user User? @relation(references: [user_id], fields: [artist_id])
+  playlist Playlist[]
+  likes Like[]
+  created_at        DateTime  @default(now())
+}
+
+
+model Playlist{ 
+  playlist_id String @id()
+  turns Turn[]
+  user_id String?
+  user User? @relation(references: [user_id], fields: [user_id])
+}
+
+model Like  {
+  like_id String @id()
+  user_id String
+  turn_id String
+  user    User   @relation(fields: [user_id], references: [user_id])
+  turn   Turn  @relation(fields: [turn_id], references: [turn_id])
+}
+
+model EntryCodes {
+  code    String  @id()
+  isUsed  Boolean
+  role    Role    @default(User)
+  user_id String?
+}
+
+enum Role {
+  User
+  Artist
+  Ghost
+  EstablishedArtist
+}
+
+enum Tier {
+  Free
+  Timeless
+  Adless
+  Platinum
+}
+
+enum Genre {
+  HipHop
+  Pop
+  Rap
+  Trap
+  Hardstyle
+  RnB
+  OldSchool
+  Drill
+  Raggaeton
+}

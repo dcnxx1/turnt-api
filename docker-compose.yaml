@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  mysql-development:
+    image: mysql:8.0
+    environment:
+      MYSQL_PASSWORD: 'helloworld'
+      MYSQL_DATABASE: testapp
+      MYSQL_ROOT_PASSWORD: 'helloworld'
+      MYSQL_PORT: 3306
+    ports:
+      - "3306:3306"
